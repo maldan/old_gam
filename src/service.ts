@@ -16,15 +16,26 @@ class MainApi {
     const ch = ChildProcess.spawn(`${folder}/app.exe`, ['--port=58123'], {
       shell: false,
       windowsHide: true,
+      cwd: folder,
     });
     PROCESS_LIST.push(ch.pid);
-    return `everything is ok ${app}`;
+
+    ch.on('exit', () => {
+      const i = PROCESS_LIST.indexOf(ch.pid);
+      if (i !== -1) {
+        PROCESS_LIST.splice(i, 1);
+      }
+    });
+
+    return `everything is ok2 ${app} ${folder}`;
   }
 
-  static get_list(): unknown {
+  static get_status(): unknown {
     return PROCESS_LIST;
   }
 }
 
 const web = new WebServer([new WS_Router('api', [MainApi]), new WS_Router('', [], ['./build'])]);
 web.listen(14392);
+
+console.log(`Service is run`);
