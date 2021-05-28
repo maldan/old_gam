@@ -52,10 +52,12 @@ export class Application {
     await Extract(`${zipPath}`, { dir: `${GAM_PATH}/${projectName}` });
 
     // Create bat executable
-    Fs.writeFileSync(
+    /*Fs.writeFileSync(
       `${GAM_PATH}/${projectName}/run.cmd`,
       `node "C:/Program Files/nodejs/node_modules/gam/bin/index.js" run "${projectUrl}"`,
-    );
+    );*/
+
+    Fs.writeFileSync(`${GAM_PATH}/${projectName}/run.cmd`, `gam run "${projectUrl}"`);
 
     // Create shortcut
     const createDesktopShortcut = require('create-desktop-shortcuts');

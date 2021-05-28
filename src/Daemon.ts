@@ -26,7 +26,7 @@ export class Daemon {
     return new Promise((resolve: any) => {
       console.log(`Run service...`);
       const spawn = require('child_process').spawn;
-      spawn('node', [`${__dirname}/Service.js`], {
+      spawn('gam-service', [], {
         stdio: 'ignore',
         detached: true,
       }).unref();
