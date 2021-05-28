@@ -67,7 +67,7 @@ try {
   }
 
   if (command === 'install') {
-    await Shell.install(argv._[1] + '');
+    await Shell.install(Application.findInRepo(argv._[1]));
   }
 
   if (command === 'upgrade') {
@@ -92,17 +92,17 @@ try {
 
   if (command === 'run') {
     let status = true;
-    if (!Application.exists(argv._[1] + '')) {
+    if (!Application.exists(Application.findInRepo(argv._[1]))) {
       console.log(`Application not found!`);
       console.log(`Trying to install...`);
-      status = await Shell.install(argv._[1] + '');
+      status = await Shell.install(Application.findInRepo(argv._[1]));
     }
 
     await Daemon.reanimate();
 
     if (status) {
       console.log(`Trying to run...`);
-      await Daemon.run(argv._[1] + '');
+      await Daemon.run(Application.findInRepo(argv._[1]));
     }
   }
 
@@ -115,7 +115,7 @@ try {
   }
 
   if (command === 'delete') {
-    await Shell.delete((argv._[1] || '') + '');
+    await Shell.delete(Application.findInRepo(argv._[1]));
   }
 
   if (command === 'status') {
