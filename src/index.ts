@@ -69,6 +69,14 @@ try {
     await Shell.install(argv._[1] + '');
   }
 
+  if (command === 'upgrade') {
+    await Shell.upgrade();
+  }
+
+  if (command === 'version') {
+    console.log(Shell.version());
+  }
+
   if (command === 'run') {
     let status = true;
     if (!Application.exists(argv._[1] + '')) {
