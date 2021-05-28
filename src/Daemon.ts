@@ -19,7 +19,7 @@ export class Daemon {
 
   static async restart(): Promise<void> {
     await this.stop();
-    await this.start();
+    await this.start(); //
   }
 
   static async start(): Promise<void> {
