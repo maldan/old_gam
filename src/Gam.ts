@@ -60,6 +60,10 @@ export class Gam {
     await Daemon.stop();
 
     try {
+      Fse.unlinkSync(`${GAM_PATH}/gam_2.exe`);
+    } catch {}
+
+    try {
       Fse.unlinkSync(`${GAM_PATH}/package.json`);
     } catch {}
     try {

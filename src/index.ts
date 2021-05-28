@@ -3,6 +3,7 @@ import { hideBin } from 'yargs/helpers';
 import * as Os from 'os';
 import * as Fse from 'fs-extra';
 import * as Util from 'util';
+import * as ChildProcess from 'child_process';
 import { Shell } from './Shell';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
@@ -70,6 +71,18 @@ try {
   }
 
   if (command === 'upgrade') {
+    try {
+      Fse.unlinkSync(`${GAM_PATH}/gam_2.exe`);
+    } catch {}
+    Fse.copyFileSync(`${GAM_PATH}/gam.exe`, `${GAM_PATH}/gam_2.exe`);
+
+    ChildProcess.spawn(`gam`, ['upgrade-real'], {
+      detached: true,
+    }).unref();
+    process.exit(0);
+  }
+
+  if (command === 'upgrade-real') {
     await Shell.upgrade();
   }
 
