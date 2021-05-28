@@ -13,19 +13,18 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: "14.15.3"
+          node-version: '14.15.3'
           registry-url: https://registry.npmjs.org/
       - run: git config --global user.name maldan
       - run: git config --global user.email blackwanted@yandex.ru
 
-      - run: npm install -g nexe
-      - run: cd backend && npm ci && npm run build
+      - run: npm ci && npm run build
       - run: echo "RELEASE_VERSION=`git tag | sort -V | tail -1`" >> $GITHUB_ENV
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: 'marvinpinto/action-automatic-releases@latest'
         with:
           title: Release ${{ env.RELEASE_VERSION }}
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
           prerelease: false
           automatic_release_tag: ${{ env.RELEASE_VERSION }}
           files: |
