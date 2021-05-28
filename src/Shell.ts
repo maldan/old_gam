@@ -63,7 +63,7 @@ export class Shell {
 
   static version(): string {
     try {
-      return JSON.parse(Fs.readFileSync('package.json', 'utf-8'))['version'];
+      return JSON.parse(Fs.readFileSync(`${GAM_PATH}/package.json`, 'utf-8'))['version'];
     } catch {
       return '1.0.0';
     }
