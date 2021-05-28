@@ -6,6 +6,8 @@ import * as Fs from 'fs';
 (async () => {
   const TEMP_DIR = `${Os.tmpdir}/gam-tmp/${new Date().getTime()}`.replace(/\\/g, '/');
   Fs.mkdirSync(TEMP_DIR, { recursive: true });
+  Fs.copyFileSync('./install.cmd', `${TEMP_DIR}/install.cmd`);
+  Fs.copyFileSync('./repo.json', `${TEMP_DIR}/repo.json`);
 
   // Build service
   await backendBuild({

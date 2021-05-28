@@ -81,4 +81,15 @@ export class Application {
   static urlToProjectName(url: string): string {
     return (url + '').replace(`https://github.com/`, ``).replace(/\//g, '__');
   }
+
+  static findInRepo(url: unknown): string {
+    const newUrl = !url ? '' : `${url}`;
+
+    try {
+      const list = JSON.parse(Fs.readFileSync(`${GAM_PATH}/repo.json`, 'utf-8'));
+      return list[newUrl] || url;
+    } catch {
+      return newUrl;
+    }
+  }
 }

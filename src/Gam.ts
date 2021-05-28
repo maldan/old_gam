@@ -60,6 +60,10 @@ export class Gam {
     await Daemon.stop();
 
     try {
+      Fse.unlinkSync(`${GAM_PATH}/repo.json`);
+    } catch {}
+
+    try {
       Fse.unlinkSync(`${GAM_PATH}/gam_2.exe`);
     } catch {}
 
@@ -80,6 +84,7 @@ export class Gam {
     } catch {}
 
     // Copy other
+    Fse.copyFileSync(`${Os.tmpdir()}/${name}/repo.json`, `${GAM_PATH}/repo.json`);
     Fse.copyFileSync(`${Os.tmpdir()}/${name}/package.json`, `${GAM_PATH}/package.json`);
     Fse.copyFileSync(`${Os.tmpdir()}/${name}/app.exe`, `${GAM_PATH}/gam.exe`);
     Fse.copyFileSync(`${Os.tmpdir()}/${name}/service.exe`, `${GAM_PATH}/gam-service.exe`);
