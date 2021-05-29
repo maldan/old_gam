@@ -19,7 +19,7 @@ import * as Fs from 'fs';
   await backendBuild({
     workingDir: TEMP_DIR,
     backendPath: Path.resolve('./'),
-    rootPath: Path.resolve('./'),
+    rootPath: Path.resolve('./'), //
     modules: [
       'y18n',
       'yargs-parser',
