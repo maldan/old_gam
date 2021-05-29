@@ -34,6 +34,7 @@ import * as Fs from 'fs';
       'get-caller-file',
       'require-directory',
     ],
+    resources: [`${Path.resolve('./')}/package.json`],
     inputScript: '/bin/Service.js',
     exeName: 'gam-service.exe',
   });
