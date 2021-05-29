@@ -6,7 +6,6 @@ import * as Util from 'util';
 import { Shell } from './Shell';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
-import { Service } from './Service';
 const Regedit = require('regedit');
 const RegList = Util.promisify(Regedit.list);
 
@@ -86,7 +85,7 @@ const command = argv._[0];
   }
 
   if (command === 'gam-service') {
-    Service.start();
+    Shell.gamServiceStart();
   }
 
   if (command === 'start') {

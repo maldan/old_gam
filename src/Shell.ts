@@ -6,6 +6,7 @@ import { GAM_APP_PATH } from '.';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
 import { Gam } from './Gam';
+import { Service } from './Service';
 
 export class Shell {
   static async install(url: string): Promise<boolean> {
@@ -67,6 +68,10 @@ export class Shell {
     } catch {
       return '1.0.0';
     }
+  }
+
+  static gamServiceStart(): void {
+    Service.start();
   }
 
   static async upgrade(): Promise<void> {
