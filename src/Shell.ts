@@ -6,7 +6,7 @@ import { GAM_APP_PATH } from '.';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
 import { Gam } from './Gam';
-import { Service } from './Service';
+import { Service } from './GamService';
 
 export class Shell {
   static async install(url: string): Promise<boolean> {
