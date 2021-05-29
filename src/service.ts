@@ -1,6 +1,6 @@
 import { WebServer, WS_Router } from '@maldan/tslib-rest-server';
 import * as ChildProcess from 'child_process';
-import { GAM_PATH } from '.';
+import { GAM_APP_PATH } from '.';
 
 const PROCESS_LIST = [] as any[];
 
@@ -12,7 +12,7 @@ class MainApi {
   }
 
   static post_run({ app }: { app: string }): unknown {
-    const folder = `${GAM_PATH}/${app}`;
+    const folder = `${GAM_APP_PATH}/${app}`;
     const ch = ChildProcess.spawn(`${folder}/app.exe`, ['--port=58123'], {
       shell: false,
       windowsHide: true,
