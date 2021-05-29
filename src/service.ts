@@ -35,7 +35,14 @@ class MainApi {
   }
 }
 
-const web = new WebServer([new WS_Router('api', [MainApi]), new WS_Router('', [], ['./build'])]);
-web.listen(14392);
+export class Service {
+  static start(): void {
+    const web = new WebServer([
+      new WS_Router('api', [MainApi]),
+      new WS_Router('', [], ['./build']),
+    ]);
+    web.listen(14392);
 
-console.log(`Service is run`);
+    console.log(`Service is run`);
+  }
+}

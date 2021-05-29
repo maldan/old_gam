@@ -2,7 +2,7 @@ import Axios from 'axios';
 import * as Fs from 'fs';
 import Semver from 'semver';
 import Rimraf from 'rimraf';
-import { GAM_APP_PATH, GAM_PATH } from '.';
+import { GAM_APP_PATH } from '.';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
 import { Gam } from './Gam';
