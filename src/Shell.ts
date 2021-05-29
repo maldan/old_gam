@@ -20,7 +20,7 @@ export class Shell {
     try {
       releaseList = (await Axios.get(`https://api.github.com/repos/${projectUrl}/releases`)).data;
     } catch {
-      console.log(`Repo not found!`);
+      console.log(`Repo not found!`); //
       return false;
     }
 
