@@ -19,7 +19,7 @@ import * as Fs from 'fs';
   await backendBuild({
     workingDir: TEMP_DIR,
     backendPath: Path.resolve('./'),
-    rootPath: Path.resolve('./'),
+    rootPath: Path.resolve('./'), //
     modules: [
       'y18n',
       'yargs-parser',
@@ -35,12 +35,13 @@ import * as Fs from 'fs';
       'require-directory',
     ],
     resources: [`${Path.resolve('./')}/package.json`],
-    inputScript: '/bin/Service.js',
-    exeName: 'gam-service.exe',
+    copyModules: ['regedit', 'create-desktop-shortcuts'],
+    exeName: 'app.exe',
+    zipOut: './application.zip', //
   });
 
   // Build gam
-  await backendBuild({
+  /* await backendBuild({
     workingDir: TEMP_DIR,
     backendPath: Path.resolve('./'),
     rootPath: Path.resolve('./'),
@@ -61,6 +62,5 @@ import * as Fs from 'fs';
     resources: [`${Path.resolve('./')}/package.json`],
     exeName: 'app.exe',
     copyModules: ['regedit', 'create-desktop-shortcuts'],
-    zipOut: './application.zip', //
-  });
+  });*/
 })();

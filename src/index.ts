@@ -3,10 +3,10 @@ import { hideBin } from 'yargs/helpers';
 import * as Os from 'os';
 import * as Fse from 'fs-extra';
 import * as Util from 'util';
-import * as ChildProcess from 'child_process';
 import { Shell } from './Shell';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
+import { Service } from './Service';
 const Regedit = require('regedit');
 const RegList = Util.promisify(Regedit.list);
 
@@ -15,12 +15,6 @@ export const GAM_APP_PATH = `${Os.homedir()}/.gam-app`;
 
 const argv = Yargs(hideBin(process.argv)).argv;
 const command = argv._[0];
-
-/*try {
-  Fse.unlinkSync(`${GAM_PATH}/gam-service.exe`);
-  Fse.unlinkSync(`${GAM_PATH}/gam.exe`);
-  Fse.unlinkSync(`${GAM_PATH}/node_modules`);
-} catch {}*/
 
 (async () => {
   if (command === 'first-init') {
@@ -52,11 +46,11 @@ const command = argv._[0];
     Fse.mkdirSync(GAM_PATH, { recursive: true });
 
     // Copy service
-    const servicePath = process.argv[0].replace(/\\/g, '/').split('/');
+    /*const servicePath = process.argv[0].replace(/\\/g, '/').split('/');
     servicePath.pop();
     servicePath.push(`service.exe`);
     console.log(servicePath.join('/'));
-    Fse.copyFileSync(`${servicePath.join('/')}`, `${GAM_PATH}/gam-service.exe`);
+    Fse.copyFileSync(`${servicePath.join('/')}`, `${GAM_PATH}/gam-service.exe`);*/
 
     // Copy other
     Fse.copyFileSync(`${process.argv[0]}`, `${GAM_PATH}/gam.exe`);
@@ -89,6 +83,10 @@ const command = argv._[0];
       console.log(`Trying to run...`);
       await Daemon.run(Application.findInRepo(argv._[1]));
     }
+  }
+
+  if (command === 'gam-service') {
+    Service.start();
   }
 
   if (command === 'start') {
