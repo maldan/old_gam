@@ -2,14 +2,28 @@ import Axios from 'axios';
 import * as Fs from 'fs';
 import * as Fse from 'fs-extra';
 import * as Os from 'os';
-import * as Util from 'util';
-import Rimraf from 'rimraf';
+import * as ChildProcess from 'child_process';
+
 import Progress from 'progress';
 import Extract from 'extract-zip';
 import { GAM_PATH } from '.';
 import { Daemon } from './Daemon';
 
-const RemoveDir = Util.promisify(Rimraf);
+function getFiles(dir: string, files_: string[]) {
+  files_ = files_ || [];
+  const files = Fse.readdirSync(dir);
+  for (const i in files) {
+    const name = dir + '/' + files[i];
+    if (Fse.statSync(name).isDirectory()) {
+      getFiles(name, files_);
+    } else {
+      files_.push(name);
+    }
+  }
+  return files_.map((x) => {
+    return x.replace(/\\/g, '/');
+  });
+}
 
 export class Gam {
   static async download(zipUrl: string, version: string): Promise<void> {
@@ -54,40 +68,66 @@ export class Gam {
   }
 
   static async unpack(zipPath: string): Promise<void> {
-    const name = `gam_${new Date().getTime()}`;
-    await Extract(`${zipPath}`, { dir: `${Os.tmpdir()}/${name}` });
-
     await Daemon.stop();
 
+    const files = getFiles(GAM_PATH, []);
+    files.forEach((x) => {
+      try {
+        Fse.unlinkSync(x);
+        console.log(`Removed ${x}`);
+      } catch {
+        console.log(`Can't remove ${x}`);
+      }
+    });
     try {
+      Fse.rmSync(`${GAM_PATH}/node_modules`, { recursive: true, force: true });
+      console.log('Removed old modules');
+    } catch {}
+
+    await Extract(`${zipPath}`, { dir: `${GAM_PATH}` });
+
+    /*try {
       Fse.unlinkSync(`${GAM_PATH}/repo.json`);
     } catch {}
 
     try {
-      Fse.unlinkSync(`${GAM_PATH}/gam_2.exe`);
+      Fse.unlinkSync(`${GAM_PATH}/gam__new.exe`);
+    } catch {}
+
+    try {
+      Fse.unlinkSync(`${GAM_PATH}/gam__update.cmd`);
     } catch {}
 
     try {
       Fse.unlinkSync(`${GAM_PATH}/package.json`);
     } catch {}
-    try {
-      Fse.unlinkSync(`${GAM_PATH}/gam.exe`);
-      console.log('Removed old gam');
-    } catch {}
+
     try {
       Fse.unlinkSync(`${GAM_PATH}/gam-service.exe`);
       console.log('Removed old gam service');
     } catch {}
     try {
-      await RemoveDir(`${GAM_PATH}/node_modules`);
+      Fse.rmSync(`${GAM_PATH}/node_modules`, { recursive: true, force: true });
       console.log('Removed old modules');
     } catch {}
 
+    Fse.copyFileSync(`${Os.tmpdir()}/${name}/gam.exe`, `${GAM_PATH}/gam__new.exe`);
+
     // Copy other
+    Fse.copyFileSync(`${Os.tmpdir()}/${name}/gam__update.cmd`, `${GAM_PATH}/gam__update.cmd`);
     Fse.copyFileSync(`${Os.tmpdir()}/${name}/repo.json`, `${GAM_PATH}/repo.json`);
     Fse.copyFileSync(`${Os.tmpdir()}/${name}/package.json`, `${GAM_PATH}/package.json`);
-    Fse.copyFileSync(`${Os.tmpdir()}/${name}/app.exe`, `${GAM_PATH}/gam.exe`);
-    Fse.copyFileSync(`${Os.tmpdir()}/${name}/service.exe`, `${GAM_PATH}/gam-service.exe`);
-    Fse.copySync(`${Os.tmpdir()}/${name}/node_modules`, `${GAM_PATH}/node_modules`);
+    Fse.copyFileSync(`${Os.tmpdir()}/${name}/gam-service.exe`, `${GAM_PATH}/gam-service.exe`);
+    Fse.copySync(`${Os.tmpdir()}/${name}/node_modules`, `${GAM_PATH}/node_modules`);*/
+
+    ChildProcess.spawn(`${GAM_PATH}/gam__update.cmd`, [], {
+      detached: true,
+      cwd: GAM_PATH,
+      stdio: 'ignore',
+    }).unref();
+    setTimeout(() => {
+      console.log('Exit');
+      process.exit(0);
+    }, 500);
   }
 }

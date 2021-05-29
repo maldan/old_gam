@@ -2,7 +2,7 @@ import Axios from 'axios';
 import * as Fs from 'fs';
 import Semver from 'semver';
 import Rimraf from 'rimraf';
-import { GAM_PATH } from '.';
+import { GAM_APP_PATH, GAM_PATH } from '.';
 import { Application } from './Application';
 import { Daemon } from './Daemon';
 import { Gam } from './Gam';
@@ -24,8 +24,8 @@ export class Shell {
     }
 
     // Remove current app
-    Rimraf.sync(`${GAM_PATH}/${projectName}`);
-    Fs.mkdirSync(`${GAM_PATH}/${projectName}`, { recursive: true });
+    Rimraf.sync(`${GAM_APP_PATH}/${projectName}`);
+    Fs.mkdirSync(`${GAM_APP_PATH}/${projectName}`, { recursive: true });
 
     // Search asset
     for (let i = 0; i < releaseList.length; i++) {
@@ -49,8 +49,8 @@ export class Shell {
     }
 
     const projectName = Application.urlToProjectName(url);
-    console.log(`${GAM_PATH}/${projectName}`);
-    Rimraf.sync(`${GAM_PATH}/${projectName}`);
+    console.log(`${GAM_APP_PATH}/${projectName}`);
+    Rimraf.sync(`${GAM_APP_PATH}/${projectName}`);
   }
 
   static async start(): Promise<void> {
@@ -63,7 +63,7 @@ export class Shell {
 
   static version(): string {
     try {
-      return JSON.parse(Fs.readFileSync(`${GAM_PATH}/package.json`, 'utf-8'))['version'];
+      return JSON.parse(Fs.readFileSync(`./package.json`, 'utf-8'))['version'];
     } catch {
       return '1.0.0';
     }

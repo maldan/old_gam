@@ -2,7 +2,7 @@ import Axios from 'axios';
 import * as Fs from 'fs';
 import Progress from 'progress';
 import Extract from 'extract-zip';
-import { GAM_PATH } from '.';
+import { GAM_APP_PATH } from '.';
 
 export class Application {
   static async download(zipUrl: string, projectUrl: string, version: string): Promise<void> {
@@ -11,8 +11,8 @@ export class Application {
       const zipName = `${projectName}_${version}.zip`;
 
       // Check archive
-      if (Fs.existsSync(`${GAM_PATH}/${zipName}`)) {
-        await this.unpack(`${GAM_PATH}/${zipName}`, projectUrl);
+      if (Fs.existsSync(`${GAM_APP_PATH}/${zipName}`)) {
+        await this.unpack(`${GAM_APP_PATH}/${zipName}`, projectUrl);
         return;
       }
 
@@ -33,12 +33,12 @@ export class Application {
         total: parseInt(totalLength),
       });
 
-      const writer = Fs.createWriteStream(`${GAM_PATH}/${zipName}`);
+      const writer = Fs.createWriteStream(`${GAM_APP_PATH}/${zipName}`);
 
       data.on('data', (chunk: { length: number }) => progressBar.tick(chunk.length));
       data.pipe(writer);
       data.on('end', async () => {
-        await this.unpack(`${GAM_PATH}/${zipName}`, projectUrl);
+        await this.unpack(`${GAM_APP_PATH}/${zipName}`, projectUrl);
         resolve();
       });
       data.on('error', (e: Error) => {
@@ -49,7 +49,7 @@ export class Application {
 
   static async unpack(zipPath: string, projectUrl: string): Promise<void> {
     const projectName = this.urlToProjectName(projectUrl);
-    await Extract(`${zipPath}`, { dir: `${GAM_PATH}/${projectName}` });
+    await Extract(`${zipPath}`, { dir: `${GAM_APP_PATH}/${projectName}` });
 
     // Create bat executable
     /*Fs.writeFileSync(
@@ -57,16 +57,16 @@ export class Application {
       `node "C:/Program Files/nodejs/node_modules/gam/bin/index.js" run "${projectUrl}"`,
     );*/
 
-    Fs.writeFileSync(`${GAM_PATH}/${projectName}/run.cmd`, `gam run "${projectUrl}"`);
+    Fs.writeFileSync(`${GAM_APP_PATH}/${projectName}/run.cmd`, `gam run "${projectUrl}"`);
 
     // Create shortcut
     const createDesktopShortcut = require('create-desktop-shortcuts');
     createDesktopShortcut({
       windows: {
-        filePath: `${GAM_PATH}/${projectName}/run.cmd`,
+        filePath: `${GAM_APP_PATH}/${projectName}/run.cmd`,
         name: `${projectName}`,
         comment: `Run ${projectName}`,
-        workingDirectory: `${GAM_PATH}/${projectName}`,
+        workingDirectory: `${GAM_APP_PATH}/${projectName}`,
       },
     });
 
@@ -75,7 +75,7 @@ export class Application {
 
   static exists(url: string): boolean {
     const projectName = this.urlToProjectName(url);
-    return Fs.existsSync(`${GAM_PATH}/${projectName}`);
+    return Fs.existsSync(`${GAM_APP_PATH}/${projectName}`);
   }
 
   static urlToProjectName(url: string): string {
@@ -86,7 +86,7 @@ export class Application {
     const newUrl = !url ? '' : `${url}`;
 
     try {
-      const list = JSON.parse(Fs.readFileSync(`${GAM_PATH}/repo.json`, 'utf-8'));
+      const list = JSON.parse(Fs.readFileSync(`${GAM_APP_PATH}/repo.json`, 'utf-8'));
       return list[newUrl] || url;
     } catch {
       return newUrl;

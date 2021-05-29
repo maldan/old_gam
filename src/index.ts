@@ -11,6 +11,7 @@ const Regedit = require('regedit');
 const RegList = Util.promisify(Regedit.list);
 
 export const GAM_PATH = `${Os.homedir()}/.gam`;
+export const GAM_APP_PATH = `${Os.homedir()}/.gam-app`;
 
 const argv = Yargs(hideBin(process.argv)).argv;
 const command = argv._[0];
@@ -20,10 +21,6 @@ const command = argv._[0];
   Fse.unlinkSync(`${GAM_PATH}/gam.exe`);
   Fse.unlinkSync(`${GAM_PATH}/node_modules`);
 } catch {}*/
-
-// Copy program
-try {
-} catch {}
 
 (async () => {
   if (command === 'first-init') {
@@ -71,18 +68,6 @@ try {
   }
 
   if (command === 'upgrade') {
-    try {
-      Fse.unlinkSync(`${GAM_PATH}/gam_2.exe`);
-    } catch {}
-    Fse.copyFileSync(`${GAM_PATH}/gam.exe`, `${GAM_PATH}/gam_2.exe`);
-
-    ChildProcess.spawn(`gam`, ['upgrade-real'], {
-      detached: true,
-    }).unref();
-    process.exit(0);
-  }
-
-  if (command === 'upgrade-real') {
     await Shell.upgrade();
   }
 

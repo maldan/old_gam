@@ -7,7 +7,13 @@ import * as Fs from 'fs';
   const TEMP_DIR = `${Os.tmpdir}/gam-tmp/${new Date().getTime()}`.replace(/\\/g, '/');
   Fs.mkdirSync(TEMP_DIR, { recursive: true });
   Fs.copyFileSync('./install.cmd', `${TEMP_DIR}/install.cmd`);
+  Fs.copyFileSync('./update.cmd', `${TEMP_DIR}/gam__update.cmd`);
   Fs.copyFileSync('./repo.json', `${TEMP_DIR}/repo.json`);
+
+  try {
+    Fs.unlinkSync(`./bin/package.json`);
+  } catch {}
+  Fs.copyFileSync('./package.json', `./bin/package.json`);
 
   // Build service
   await backendBuild({
@@ -29,7 +35,7 @@ import * as Fs from 'fs';
       'require-directory',
     ],
     inputScript: '/bin/Service.js',
-    exeName: 'service.exe',
+    exeName: 'gam-service.exe',
   });
 
   // Build gam
@@ -51,6 +57,8 @@ import * as Fs from 'fs';
       'get-caller-file',
       'require-directory',
     ],
+    resources: [`${Path.resolve('./')}/package.json`],
+    exeName: 'app.exe',
     copyModules: ['regedit', 'create-desktop-shortcuts'],
     zipOut: './application.zip', //
   });
