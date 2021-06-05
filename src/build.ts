@@ -47,8 +47,8 @@ import { Builder } from '@maldan/tslib-gam-builder';
   //  await b.copyFiles(`./node_modules/${modules[i]}/**/*`, '/out-linux');
   //}
 
-  //await b.zip(`./application-windows-x64.zip`, '/out-windows');
-  //await b.zip(`./application-linux-x64.zip`, '/out-linux');
+  await b.zip(`./application-windows-x64.zip`, '/out-windows');
+  await b.zip(`./application-linux-x64.zip`, '/out-linux'); //
 
   /*const TEMP_DIR = `${Os.tmpdir}/gam-tmp/${new Date().getTime()}`.replace(/\\/g, '/');
   Fs.mkdirSync(TEMP_DIR, { recursive: true });
