@@ -28,4 +28,5 @@ jobs:
           prerelease: false
           automatic_release_tag: ${{ env.RELEASE_VERSION }}
           files: |
-            application.zip
+            application-linux-x64.zip
+            application-windows-x64.zip
