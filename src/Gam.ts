@@ -120,14 +120,23 @@ export class Gam {
     Fse.copyFileSync(`${Os.tmpdir()}/${name}/gam-service.exe`, `${GAM_PATH}/gam-service.exe`);
     Fse.copySync(`${Os.tmpdir()}/${name}/node_modules`, `${GAM_PATH}/node_modules`);*/
 
-    ChildProcess.spawn(`${GAM_PATH}/gam__update.cmd`, [], {
-      detached: true,
-      cwd: GAM_PATH,
-      stdio: 'ignore',
-    }).unref();
+    if (Os.platform() === 'win32') {
+      ChildProcess.spawn(`${GAM_PATH}/gam__update.cmd`, [], {
+        detached: true,
+        cwd: GAM_PATH,
+        stdio: 'ignore',
+      }).unref();
+    }
+
     setTimeout(() => {
       console.log('Exit');
       process.exit(0);
     }, 500);
+  }
+
+  static get platform(): string {
+    const p = Os.platform() === 'win32' ? 'windows' : Os.platform();
+    const a = Os.arch();
+    return `${p}-${a}`;
   }
 }

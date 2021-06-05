@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import * as Fs from 'fs';
+import * as Os from 'os';
 import Progress from 'progress';
 import Extract from 'extract-zip';
 import { GAM_APP_PATH } from '.';
@@ -57,18 +58,20 @@ export class Application {
       `node "C:/Program Files/nodejs/node_modules/gam/bin/index.js" run "${projectUrl}"`,
     );*/
 
-    Fs.writeFileSync(`${GAM_APP_PATH}/${projectName}/run.cmd`, `gam run "${projectUrl}"`);
+    if (Os.platform() === 'win32') {
+      Fs.writeFileSync(`${GAM_APP_PATH}/${projectName}/run.cmd`, `gam run "${projectUrl}"`);
 
-    // Create shortcut
-    const createDesktopShortcut = require('create-desktop-shortcuts');
-    createDesktopShortcut({
-      windows: {
-        filePath: `${GAM_APP_PATH}/${projectName}/run.cmd`,
-        name: `${projectName}`,
-        comment: `Run ${projectName}`,
-        workingDirectory: `${GAM_APP_PATH}/${projectName}`,
-      },
-    });
+      // Create shortcut
+      const createDesktopShortcut = require('create-desktop-shortcuts');
+      createDesktopShortcut({
+        windows: {
+          filePath: `${GAM_APP_PATH}/${projectName}/run.cmd`,
+          name: `${projectName}`,
+          comment: `Run ${projectName}`,
+          workingDirectory: `${GAM_APP_PATH}/${projectName}`,
+        },
+      });
+    }
 
     console.log('Unpacked successfully...');
   }
