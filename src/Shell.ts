@@ -31,7 +31,7 @@ export class Shell {
     // Search asset
     for (let i = 0; i < releaseList.length; i++) {
       for (let j = 0; j < releaseList[i].assets.length; j++) {
-        if (releaseList[i].assets[j].name === 'application.zip') {
+        if (releaseList[i].assets[j].name === `application-${Gam.platform}.zip`) {
           const url = releaseList[i].assets[j].browser_download_url;
           await Application.download(url, projectUrl, releaseList[i].tag_name);
           return true;
@@ -91,7 +91,7 @@ export class Shell {
         continue;
       }
       for (let j = 0; j < releaseList[i].assets.length; j++) {
-        if (releaseList[i].assets[j].name === 'application.zip') {
+        if (releaseList[i].assets[j].name === `application-${Gam.platform}.zip`) {
           const url = releaseList[i].assets[j].browser_download_url;
           await Gam.download(url, releaseList[i].tag_name);
           return;
